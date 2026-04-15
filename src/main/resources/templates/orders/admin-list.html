@@ -58,7 +58,7 @@
         <tbody>
             <tr th:each="order : ${orders}">
                 <td th:text="${order.id}">1</td>
-                <td th:text="${order.client.firstName + ' ' + order.client.lastName}">Иван Клиентов</td>
+                <td th:text="${order.client != null ? order.client.firstName + ' ' + order.client.lastName : 'Неизвестно'}">Иван Клиентов</td>
                 <td th:text="${order.car.brand + ' ' + order.car.model}">Auto</td>
                 <td>
                     <span th:text="${order.startDate}"></span> - 

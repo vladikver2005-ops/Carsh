@@ -7,8 +7,8 @@ com/carsh/Carsh/model/service/DamageService.class
 com/carsh/Carsh/model/entity/Car$CarStatus.class
 com/carsh/Carsh/model/repository/OrderRepository.class
 com/carsh/Carsh/model/service/PaymentService.class
-com/carsh/Carsh/model/entity/User$UserRole.class
 com/carsh/Carsh/model/service/CustomUserDetails.class
+com/carsh/Carsh/model/entity/User$UserRole.class
 com/carsh/Carsh/model/entity/Car.class
 com/carsh/Carsh/controller/CarController.class
 com/carsh/Carsh/controller/AuthController.class
@@ -19,8 +19,8 @@ com/carsh/Carsh/model/entity/Order$OrderStatus.class
 com/carsh/Carsh/ServletInitializer.class
 com/carsh/Carsh/model/service/CarService.class
 com/carsh/Carsh/model/repository/DamageRepository.class
-com/carsh/Carsh/config/SecurityConfig.class
 com/carsh/Carsh/model/service/DataInitializer.class
+com/carsh/Carsh/config/SecurityConfig.class
 com/carsh/Carsh/controller/DamageController.class
 com/carsh/Carsh/model/entity/Payment$PaymentStatus.class
 com/carsh/Carsh/model/entity/Order.class
