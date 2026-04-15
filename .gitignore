@@ -1,24 +1,67 @@
+# Examples
+
+## Example 1:
+**Input:**
 ```
-# Compiled and binary files
-*.class
+### Added files:
+['src/main.py', 'README.md', 'config.json']
+
+### Deleted files:
+['old/unused.py']
+
+### Modified files:
+['utils.py']
+
+### Current .gitignore Content:
+(empty)
+```
+**Output:**
+
+
+## Example 2:
+**Input:**
+```
+### Added files:
+['__pycache__/main.cpython-310.pyc', 'dist/app.js', '.env.local', '.vscode/settings.json']
+
+### Deleted files:
+[]
+
+### Modified files:
+[]
+
+### Current .gitignore Content:
+*.log
+```
+**Output:**
+```
+# Compiled and build artifacts
+*.pyc
+__pycache__/
 *.o
 *.obj
-*.out
+dist/
+build/
 
 # Dependencies
-target/
-.gradle/
+.venv/
+venv/
+node_modules/
 
 # Logs and temp files
 *.log
 *.tmp
+*.swp
+
+# Environment
+.env
+.env.local
+.env.*
 
 # Editors
 .vscode/
 .idea/
 
-# Environment
-.env
-.env.local
-*.env.*
+# Original rules preserved
+*.log
 ```
