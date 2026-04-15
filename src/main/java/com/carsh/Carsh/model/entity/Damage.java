@@ -1,7 +1,6 @@
 package com.carsh.Carsh.model.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
@@ -13,7 +12,6 @@ import java.time.LocalDate;
  */
 @Entity
 @Table(name = "damages")
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Damage {
@@ -42,6 +40,28 @@ public class Damage {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private DamageStatus status = DamageStatus.PENDING;
+
+    // Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    
+    public Order getOrder() { return order; }
+    public void setOrder(Order order) { this.order = order; }
+    
+    public Car getCar() { return car; }
+    public void setCar(Car car) { this.car = car; }
+    
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    
+    public BigDecimal getRepairCost() { return repairCost; }
+    public void setRepairCost(BigDecimal repairCost) { this.repairCost = repairCost; }
+    
+    public LocalDate getDamageDate() { return damageDate; }
+    public void setDamageDate(LocalDate damageDate) { this.damageDate = damageDate; }
+    
+    public DamageStatus getStatus() { return status; }
+    public void setStatus(DamageStatus status) { this.status = status; }
 
     public enum DamageStatus {
         PENDING,        // Ожидает оплаты
