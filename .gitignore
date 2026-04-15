@@ -1,16 +1,16 @@
 ```
 # Compiled and build artifacts
 *.class
-*.o
-*.obj
-*.out
 target/
+
 # Dependencies
-.mypy_cache/
-.pytest_cache/
+.m2/
+.gradle/
+
 # Logs and temp files
 *.log
 *.tmp
+
 # Editors
 .vscode/
 .idea/

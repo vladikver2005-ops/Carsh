@@ -42,6 +42,10 @@
             <span class="info-value" th:text="${order.car.brand + ' ' + order.car.model}">Auto</span>
         </div>
         <div class="info-row">
+            <span class="info-label">Клиент:</span>
+            <span class="info-value" th:text="${order.client != null ? order.client.firstName + ' ' + order.client.lastName : 'Неизвестно'}">Иван Клиентов</span>
+        </div>
+        <div class="info-row">
             <span class="info-label">Дата начала:</span>
             <span class="info-value" th:text="${order.startDate}">2024-01-01</span>
         </div>

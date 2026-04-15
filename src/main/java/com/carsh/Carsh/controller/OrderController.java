@@ -4,6 +4,7 @@ import com.carsh.Carsh.model.entity.Order;
 import com.carsh.Carsh.model.entity.User;
 import com.carsh.Carsh.model.service.OrderService;
 import com.carsh.Carsh.model.service.PaymentService;
+import com.carsh.Carsh.model.service.UserService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -19,17 +20,22 @@ public class OrderController {
 
     private final OrderService orderService;
     private final PaymentService paymentService;
+    private final UserService userService;
 
-    public OrderController(OrderService orderService, PaymentService paymentService) {
+    public OrderController(OrderService orderService, PaymentService paymentService, UserService userService) {
         this.orderService = orderService;
         this.paymentService = paymentService;
+        this.userService = userService;
     }
 
     @GetMapping
     public String listOrders(@AuthenticationPrincipal UserDetails userDetails, Model model) {
-        // Получаем текущего пользователя и его заказы
-        // В реальном приложении нужно получить User из UserRepository по username
-        model.addAttribute("orders", orderService.getAllOrders());
+        if (userDetails == null) {
+            return "redirect:/auth/login";
+        }
+        User user = userService.getUserByUsername(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+        model.addAttribute("orders", orderService.getOrdersByClient(user));
         return "orders/list";
     }
 
@@ -62,13 +68,16 @@ public class OrderController {
                              @AuthenticationPrincipal UserDetails userDetails,
                              RedirectAttributes redirectAttributes) {
         
-        // В реальном приложении нужно получить User объект из UserRepository
-        // Здесь упрощенно - предполагается что пользователь уже авторизован
+        if (userDetails == null) {
+            redirectAttributes.addFlashAttribute("error", "Необходимо авторизоваться");
+            return "redirect:/auth/login";
+        }
+        
         try {
-            // Для демо-целей создаем заказ без привязки к конкретному пользователю
-            // В продакшене нужно получить User из БД по username
+            User user = userService.getUserByUsername(userDetails.getUsername())
+                    .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
             Order order = orderService.createOrder(
-                null, // TODO: получить реального пользователя
+                user,
                 carId, 
                 startDate, 
                 endDate,
