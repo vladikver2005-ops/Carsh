@@ -9,10 +9,9 @@
 *.a
 
 # Dependencies
-target/
-.m2/
+**/target/
 .gradle/
-node_modules/
+**/.gradle/
 
 # Logs and temp files
 *.log
@@ -30,7 +29,19 @@ node_modules/
 *.swp
 *.swo
 
-# Build and distribution
-dist/
-build/
+# Java specific
+*.jar
+*.war
+*.ear
+!*.java
+
+# Maven
+.mvn/
+**/mvn/
+**/target/
+
+# Security
+keystore
+.jks
+.p12
 ```

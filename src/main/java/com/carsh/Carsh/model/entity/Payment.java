@@ -1,7 +1,6 @@
 package com.carsh.Carsh.model.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
@@ -13,7 +12,6 @@ import java.time.LocalDate;
  */
 @Entity
 @Table(name = "payments")
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Payment {
@@ -38,6 +36,25 @@ public class Payment {
 
     @Column(length = 500)
     private String paymentMethod;
+
+    // Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    
+    public Order getOrder() { return order; }
+    public void setOrder(Order order) { this.order = order; }
+    
+    public BigDecimal getAmount() { return amount; }
+    public void setAmount(BigDecimal amount) { this.amount = amount; }
+    
+    public LocalDate getPaymentDate() { return paymentDate; }
+    public void setPaymentDate(LocalDate paymentDate) { this.paymentDate = paymentDate; }
+    
+    public PaymentStatus getStatus() { return status; }
+    public void setStatus(PaymentStatus status) { this.status = status; }
+    
+    public String getPaymentMethod() { return paymentMethod; }
+    public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
 
     public enum PaymentStatus {
         PENDING,        // Ожидает оплаты

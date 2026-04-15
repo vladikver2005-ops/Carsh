@@ -1,16 +1,13 @@
 package com.carsh.Carsh.model.service;
 
 import com.carsh.Carsh.model.entity.User;
-import com.carsh.Carsh.model.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
 
-@Service
 public class CustomUserDetails implements UserDetails {
 
     private final User user;
