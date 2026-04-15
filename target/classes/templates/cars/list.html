@@ -16,13 +16,13 @@
                      onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2RkZCIvPjx0ZXh0IHg9IjE1MCIgeT0iMTAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiM2NjYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkF2dG88L3RleHQ+PC9zdmc+'">
                 <div class="car-info">
                     <h3 th:text="${car.brand + ' ' + car.model}">Марка Модель</h3>
-                    <p class="car-year" th:text="'Год: ' + ${car.year}">Год: 2023</p>
+                    <p class="car-year" th:text="'Год: ' + ${car.carYear}">Год: 2023</p>
                     <p class="car-color" th:text="'Цвет: ' + ${car.color}">Цвет: Красный</p>
                     <p class="car-plate" th:text="'Номер: ' + ${car.licensePlate}">Номер: А001АА77</p>
                     <p class="car-price" th:text="${car.rentalPricePerDay} + ' ₽/день'">5000 ₽/день</p>
                     <p class="car-description" th:text="${car.description}">Описание автомобиля</p>
                     
-                    <a th:href="@{/orders/new(carId=${car.id})}" class="btn btn-primary">Заказать</a>
+                    <a th:href="@{/orders/new/{carId}(carId=${car.id})}" class="btn btn-primary">Заказать</a>
                 </div>
             </div>
         </div>

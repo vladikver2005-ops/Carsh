@@ -22,7 +22,7 @@
                     <p class="car-price" th:text="${car.rentalPricePerDay} + ' ₽/день'">5000 ₽/день</p>
                     <p class="car-description" th:text="${car.description}">Описание автомобиля</p>
                     
-                    <a th:href="@{/orders/new(carId=${car.id})}" class="btn btn-primary">Заказать</a>
+                    <a th:href="@{/orders/new/{carId}(carId=${car.id})}" class="btn btn-primary">Заказать</a>
                 </div>
             </div>
         </div>
