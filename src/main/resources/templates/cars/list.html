@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="content">
+    <div class="container">
+        <h1>Доступные автомобили</h1>
+        
+        <div th:if="${#lists.isEmpty(cars)}" class="alert alert-info">
+            В данный момент нет доступных автомобилей. Попробуйте позже.
+        </div>
+        
+        <div class="cars-grid" th:unless="${#lists.isEmpty(cars)}">
+            <div class="car-card" th:each="car : ${cars}">
+                <img th:src="${car.imageUrl != null ? car.imageUrl : '/images/default-car.png'}" 
+                     alt="Автомобиль" class="car-image"
+                     onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2RkZCIvPjx0ZXh0IHg9IjE1MCIgeT0iMTAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiM2NjYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkF2dG88L3RleHQ+PC9zdmc+'">
+                <div class="car-info">
+                    <h3 th:text="${car.brand + ' ' + car.model}">Марка Модель</h3>
+                    <p class="car-year" th:text="'Год: ' + ${car.year}">Год: 2023</p>
+                    <p class="car-color" th:text="'Цвет: ' + ${car.color}">Цвет: Красный</p>
+                    <p class="car-plate" th:text="'Номер: ' + ${car.licensePlate}">Номер: А001АА77</p>
+                    <p class="car-price" th:text="${car.rentalPricePerDay} + ' ₽/день'">5000 ₽/день</p>
+                    <p class="car-description" th:text="${car.description}">Описание автомобиля</p>
+                    
+                    <a th:href="@{/orders/new(carId=${car.id})}" class="btn btn-primary">Заказать</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="back-link">
+            <a href="/" class="btn btn-secondary">← На главную</a>
+        </div>
+    </div>
+    
+    <style>
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #2c3e50;
+        }
+        .cars-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        .car-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .car-card:hover {
+            transform: translateY(-5px);
+        }
+        .car-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #f5f5f5;
+        }
+        .car-info {
+            padding: 1.5rem;
+        }
+        .car-info h3 {
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+        .car-info p {
+            margin-bottom: 0.5rem;
+            color: #666;
+        }
+        .car-price {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .car-description {
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 1rem;
+            transition: opacity 0.3s ease;
+        }
+        .btn-primary {
+            background: #667eea;
+            color: white;
+            width: 100%;
+            text-align: center;
+        }
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        .back-link {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        .alert {
+            padding: 1rem;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .alert-info {
+            background: #e7f3ff;
+            color: #0066cc;
+        }
+    </style>
+</th:block>
+</body>
+</html>
