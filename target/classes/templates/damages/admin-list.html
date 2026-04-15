@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список повреждений - CarSh</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5; color: #333; line-height: 1.6; }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+        h1 { text-align: center; margin-bottom: 2rem; color: #2c3e50; }
+        table { width: 100%; border-collapse: collapse; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 10px; overflow: hidden; }
+        th, td { padding: 1rem; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #2c3e50; color: white; }
+        tr:hover { background: #f9f9f9; }
+        .status { padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.85rem; font-weight: bold; }
+        .status-PENDING { background: #fff3cd; color: #856404; }
+        .status-PAID { background: #d4edda; color: #155724; }
+        .status-CANCELLED { background: #f8d7da; color: #721c24; }
+        .btn { display: inline-block; padding: 0.5rem 1rem; border-radius: 5px; text-decoration: none; font-weight: bold; margin-right: 0.5rem; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-info { background: #17a2b8; color: white; }
+        .back-link { text-align: center; margin-top: 2rem; }
+        .alert { padding: 1rem; border-radius: 5px; margin-bottom: 1rem; text-align: center; }
+        .alert-info { background: #e7f3ff; color: #0066cc; }
+        .alert-success { background: #d4edda; color: #155724; }
+        .alert-danger { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Управление повреждениями (Администратор)</h1>
+    
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+    
+    <div th:if="${#lists.isEmpty(damages)}" class="alert alert-info">
+        Повреждений пока нет.
+    </div>
+    
+    <table th:unless="${#lists.isEmpty(damages)}">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Заказ</th>
+                <th>Автомобиль</th>
+                <th>Описание</th>
+                <th>Стоимость</th>
+                <th>Дата</th>
+                <th>Статус</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="damage : ${damages}">
+                <td th:text="${damage.id}">1</td>
+                <td th:text="'#' + ${damage.order.id}">#1</td>
+                <td th:text="${damage.car.brand + ' ' + damage.car.model}">Auto</td>
+                <td th:text="${damage.description}">Описание</td>
+                <td th:text="${damage.repairCost} + ' ₽'">1000 ₽</td>
+                <td th:text="${damage.damageDate}">2024-01-01</td>
+                <td>
+                    <span class="status" th:classappend="'status-' + ${damage.status.name()}" 
+                          th:text="${damage.status.name()}">PENDING</span>
+                </td>
+                <td>
+                    <form th:if="${damage.status.name() == 'PENDING'}" th:action="@{/damages/pay/{id}(id=${damage.id})}" method="post" style="display: inline;">
+                        <button type="submit" class="btn btn-success">Оплачено</button>
+                    </form>
+                    <a th:href="@{/orders/{id}(id=${damage.order.id})}" class="btn btn-info">Заказ</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div class="back-link">
+        <a href="/orders/admin" class="btn btn-info">← К заказам</a>
+        <a href="/" class="btn btn-info">← На главную</a>
+    </div>
+</div>
+</body>
+</html>

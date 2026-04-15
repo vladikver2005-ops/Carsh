@@ -31,7 +31,6 @@
     <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
     
     <form th:action="@{/orders/create}" method="post" class="form-card">
-        <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
         <input type="hidden" name="carId" th:value="${carId}"/>
         
         <div class="form-group">
