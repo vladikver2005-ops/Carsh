@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Детали заказа - CarSh</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5; color: #333; line-height: 1.6; }
+        .container { max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
+        h1 { text-align: center; margin-bottom: 2rem; color: #2c3e50; }
+        .card { background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 1.5rem; }
+        .info-row { display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid #eee; }
+        .info-row:last-child { border-bottom: none; }
+        .info-label { font-weight: bold; color: #666; }
+        .info-value { color: #2c3e50; }
+        .status { padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.85rem; font-weight: bold; }
+        .status-PENDING { background: #fff3cd; color: #856404; }
+        .status-APPROVED { background: #d4edda; color: #155724; }
+        .status-ACTIVE { background: #cce5ff; color: #004085; }
+        .status-COMPLETED { background: #d4edda; color: #155724; }
+        .status-REJECTED { background: #f8d7da; color: #721c24; }
+        .status-DAMAGED { background: #f8d7da; color: #721c24; }
+        .btn { display: inline-block; padding: 0.75rem 1.5rem; border-radius: 5px; text-decoration: none; font-weight: bold; margin-right: 0.5rem; cursor: pointer; border: none; }
+        .btn-primary { background: #667eea; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .back-link { text-align: center; margin-top: 2rem; }
+        .alert { padding: 1rem; border-radius: 5px; margin-bottom: 1rem; }
+        .alert-danger { background: #ffebee; color: #c62828; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Детали заказа №<span th:text="${order.id}">1</span></h1>
+    
+    <div class="card">
+        <h2 style="margin-bottom: 1.5rem;">Информация о заказе</h2>
+        
+        <div class="info-row">
+            <span class="info-label">Автомобиль:</span>
+            <span class="info-value" th:text="${order.car.brand + ' ' + order.car.model}">Auto</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Клиент:</span>
+            <span class="info-value" th:text="${order.client != null ? order.client.firstName + ' ' + order.client.lastName : 'Неизвестно'}">Иван Клиентов</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Дата начала:</span>
+            <span class="info-value" th:text="${order.startDate}">2024-01-01</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Дата окончания:</span>
+            <span class="info-value" th:text="${order.endDate}">2024-01-07</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Стоимость:</span>
+            <span class="info-value" th:text="${order.totalPrice} + ' ₽'">5000 ₽</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Статус:</span>
+            <span class="status" th:classappend="'status-' + ${order.status.name()}" 
+                  th:text="${order.status.name()}">PENDING</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Дата создания:</span>
+            <span class="info-value" th:text="${order.createdAt}">2024-01-01</span>
+        </div>
+    </div>
+    
+    <div class="card">
+        <h2 style="margin-bottom: 1.5rem;">Паспортные данные</h2>
+        
+        <div class="info-row">
+            <span class="info-label">Серия:</span>
+            <span class="info-value" th:text="${order.passportSeries}">1234</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Номер:</span>
+            <span class="info-value" th:text="${order.passportNumber}">567890</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Кем выдан:</span>
+            <span class="info-value" th:text="${order.passportIssuedBy}">УВД</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Дата выдачи:</span>
+            <span class="info-value" th:text="${order.passportIssueDate}">2020-01-01</span>
+        </div>
+    </div>
+    
+    <div th:if="${order.rejectionReason}" class="alert alert-danger">
+        <strong>Причина отказа:</strong> <span th:text="${order.rejectionReason}"></span>
+    </div>
+    
+    <div th:if="${order.status.name() == 'PENDING'}" style="text-align: center; margin-top: 1.5rem;">
+        <form th:action="@{/orders/pay/{id}(id=${order.id})}" method="post" style="display: inline;">
+            <button type="submit" class="btn btn-success">Оплатить заказ</button>
+        </form>
+    </div>
+    
+    <div class="back-link">
+        <a href="/orders" class="btn btn-secondary">← К списку заказов</a>
+        <a href="/cars" class="btn btn-secondary">← К автомобилям</a>
+    </div>
+</div>
+</body>
+</html>

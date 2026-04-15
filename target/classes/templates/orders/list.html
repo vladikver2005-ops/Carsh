@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список заказов - CarSh</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5; color: #333; line-height: 1.6; }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+        h1 { text-align: center; margin-bottom: 2rem; color: #2c3e50; }
+        table { width: 100%; border-collapse: collapse; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 10px; overflow: hidden; }
+        th, td { padding: 1rem; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #2c3e50; color: white; }
+        tr:hover { background: #f9f9f9; }
+        .status { padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.85rem; font-weight: bold; }
+        .status-PENDING { background: #fff3cd; color: #856404; }
+        .status-APPROVED { background: #d4edda; color: #155724; }
+        .status-ACTIVE { background: #cce5ff; color: #004085; }
+        .status-COMPLETED { background: #d4edda; color: #155724; }
+        .status-REJECTED { background: #f8d7da; color: #721c24; }
+        .status-DAMAGED { background: #f8d7da; color: #721c24; }
+        .btn { display: inline-block; padding: 0.5rem 1rem; border-radius: 5px; text-decoration: none; font-weight: bold; margin-right: 0.5rem; }
+        .btn-primary { background: #667eea; color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .back-link { text-align: center; margin-top: 2rem; }
+        .alert { padding: 1rem; border-radius: 5px; margin-bottom: 1rem; text-align: center; }
+        .alert-info { background: #e7f3ff; color: #0066cc; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Мои заказы</h1>
+    
+    <div th:if="${#lists.isEmpty(orders)}" class="alert alert-info">
+        У вас пока нет заказов.
+    </div>
+    
+    <table th:unless="${#lists.isEmpty(orders)}">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Автомобиль</th>
+                <th>Дата начала</th>
+                <th>Дата окончания</th>
+                <th>Стоимость</th>
+                <th>Статус</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="order : ${orders}">
+                <td th:text="${order.id}">1</td>
+                <td th:text="${order.car.brand + ' ' + order.car.model}">Auto</td>
+                <td th:text="${order.startDate}">2024-01-01</td>
+                <td th:text="${order.endDate}">2024-01-07</td>
+                <td th:text="${order.totalPrice} + ' ₽'">5000 ₽</td>
+                <td>
+                    <span class="status" th:classappend="'status-' + ${order.status.name()}" 
+                          th:text="${order.status.name()}">PENDING</span>
+                </td>
+                <td>
+                    <a th:href="@{/orders/{id}(id=${order.id})}" class="btn btn-primary">Просмотр</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div class="back-link">
+        <a href="/cars" class="btn btn-secondary">← К автомобилям</a>
+        <a href="/" class="btn btn-secondary">← На главную</a>
+    </div>
+</div>
+</body>
+</html>
