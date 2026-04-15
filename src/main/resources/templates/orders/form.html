@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создание заказа - CarSh</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5; color: #333; line-height: 1.6; }
+        .container { max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
+        h1 { text-align: center; margin-bottom: 2rem; color: #2c3e50; }
+        .form-card { background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: bold; color: #2c3e50; }
+        .form-group input, .form-group select { width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem; }
+        .form-group input:focus { outline: none; border-color: #667eea; }
+        .btn { display: inline-block; padding: 0.75rem 1.5rem; border-radius: 5px; text-decoration: none; font-weight: bold; cursor: pointer; border: none; }
+        .btn-primary { background: #667eea; color: white; width: 100%; }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-secondary { background: #6c757d; color: white; display: inline-block; margin-top: 1rem; }
+        .alert { padding: 1rem; border-radius: 5px; margin-bottom: 1rem; }
+        .alert-danger { background: #ffebee; color: #c62828; }
+        .alert-success { background: #e8f5e9; color: #2e7d32; }
+        .back-link { text-align: center; margin-top: 1rem; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Оформление заказа на аренду</h1>
+    
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+    
+    <form th:action="@{/orders/create}" method="post" class="form-card">
+        <input type="hidden" name="carId" th:value="${carId}"/>
+        
+        <div class="form-group">
+            <label>Дата начала аренды:</label>
+            <input type="date" name="startDate" th:value="${startDate}" required/>
+        </div>
+        
+        <div class="form-group">
+            <label>Дата окончания аренды:</label>
+            <input type="date" name="endDate" th:value="${endDate}" required/>
+        </div>
+        
+        <h3 style="margin: 1.5rem 0 1rem;">Паспортные данные</h3>
+        
+        <div class="form-group">
+            <label>Серия паспорта:</label>
+            <input type="text" name="passportSeries" placeholder="1234" pattern="[0-9]{4}" required/>
+        </div>
+        
+        <div class="form-group">
+            <label>Номер паспорта:</label>
+            <input type="text" name="passportNumber" placeholder="567890" pattern="[0-9]{6}" required/>
+        </div>
+        
+        <div class="form-group">
+            <label>Кем выдан:</label>
+            <input type="text" name="passportIssuedBy" placeholder="Наименование подразделения" required/>
+        </div>
+        
+        <div class="form-group">
+            <label>Дата выдачи:</label>
+            <input type="date" name="passportIssueDate" required/>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Создать заказ</button>
+    </form>
+    
+    <div class="back-link">
+        <a href="/cars" class="btn btn-secondary">← Назад к автомобилям</a>
+    </div>
+</div>
+</body>
+</html>
