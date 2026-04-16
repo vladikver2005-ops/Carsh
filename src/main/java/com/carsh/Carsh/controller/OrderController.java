@@ -60,12 +60,12 @@ public class OrderController {
 
     @PostMapping("/create")
     public String createOrder(@RequestParam Long carId,
-                             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-                             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+                             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+                             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
                              @RequestParam String passportSeries,
                              @RequestParam String passportNumber,
                              @RequestParam String passportIssuedBy,
-                             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate passportIssueDate,
+                             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate passportIssueDate,
                              @AuthenticationPrincipal UserDetails userDetails,
                              RedirectAttributes redirectAttributes) {
         
