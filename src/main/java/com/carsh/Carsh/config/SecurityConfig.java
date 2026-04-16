@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.savedrequest.SavedRequest;
 
 @Configuration
 @EnableWebSecurity
@@ -73,6 +74,11 @@ public class SecurityConfig {
                 .loginPage("/auth/login")
                 .loginProcessingUrl("/auth/login")
                 .defaultSuccessUrl("/cars", true)
+                .successHandler((request, response, authentication) -> {
+                    SavedRequest savedRequest = (SavedRequest) request.getSession().getAttribute("SPRING_SECURITY_SAVED_REQUEST");
+                    String targetUrl = savedRequest != null ? savedRequest.getRedirectUrl() : "/cars";
+                    response.sendRedirect(targetUrl);
+                })
                 .failureUrl("/auth/login?error=true")
                 .permitAll()
             )
