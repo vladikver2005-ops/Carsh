@@ -39,8 +39,7 @@ public class SecurityConfig {
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService());
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService());
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
@@ -58,8 +57,17 @@ public class SecurityConfig {
                 .requestMatchers("/", "/home", "/register", "/cars/**", "/h2-console/**", "/auth/login").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/client/**").hasAnyRole("CLIENT", "ADMIN")
+                .requestMatchers("/orders/new/**").authenticated()
                 .requestMatchers("/orders/**").authenticated()
                 .anyRequest().authenticated()
+            )
+            .exceptionHandling(ex -> ex
+                .accessDeniedHandler((request, response, accessDeniedException) -> {
+                    response.sendRedirect("/auth/login?accessDenied");
+                })
+                .authenticationEntryPoint((request, response, authException) -> {
+                    response.sendRedirect("/auth/login?loginRequired");
+                })
             )
             .formLogin(form -> form
                 .loginPage("/auth/login")
