@@ -57,6 +57,7 @@ public class SecurityConfig {
                 .requestMatchers("/", "/home", "/register", "/cars/**", "/h2-console/**").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/client/**").hasAnyRole("CLIENT", "ADMIN")
+                .requestMatchers("/orders/new/**").authenticated()
                 .requestMatchers("/orders/**").authenticated()
                 .anyRequest().authenticated()
             )
