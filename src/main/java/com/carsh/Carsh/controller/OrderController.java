@@ -52,6 +52,9 @@ public class OrderController {
     public String newOrderForm(@PathVariable Long carId, 
                                @AuthenticationPrincipal UserDetails userDetails,
                                Model model) {
+        if (userDetails == null) {
+            return "redirect:/auth/login";
+        }
         model.addAttribute("carId", carId);
         model.addAttribute("startDate", LocalDate.now());
         model.addAttribute("endDate", LocalDate.now().plusDays(7));
