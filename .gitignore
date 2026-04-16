@@ -1,18 +1,12 @@
 ```
 # Compiled and build artifacts
 *.class
-*.o
-*.obj
-*.out
-build/
 target/
 
 # Dependencies
-.gradle/
 .mypy_cache/
 .pytest_cache/
 __pycache__/
-node_modules/
 venv/
 .venv/
 
@@ -29,8 +23,4 @@ venv/
 # Editors
 .vscode/
 .idea/
-
-# System files
-.DS_Store
-Thumbs.db
 ```
