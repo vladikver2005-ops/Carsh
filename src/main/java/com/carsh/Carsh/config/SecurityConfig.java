@@ -54,7 +54,7 @@ public class SecurityConfig {
         http
             .authenticationProvider(authenticationProvider())
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/", "/home", "/register", "/cars/**", "/h2-console/**", "/auth/login").permitAll()
+                .requestMatchers("/", "/home", "/register", "/cars/**", "/h2-console/**", "/auth/login", "/admin/init").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/client/**").hasAnyRole("CLIENT", "ADMIN")
                 .requestMatchers("/orders/new/**").authenticated()
@@ -72,7 +72,7 @@ public class SecurityConfig {
             .formLogin(form -> form
                 .loginPage("/auth/login")
                 .loginProcessingUrl("/auth/login")
-                .defaultSuccessUrl("/home", true)
+                .defaultSuccessUrl("/cars", true)
                 .failureUrl("/auth/login?error=true")
                 .permitAll()
             )
@@ -88,9 +88,6 @@ public class SecurityConfig {
             )
             .headers(headers -> headers
                 .frameOptions(frame -> frame.disable())
-                .contentSecurityPolicy(csp -> csp
-                    .policyDirectives("script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';")
-                )
             );
 
         return http.build();
