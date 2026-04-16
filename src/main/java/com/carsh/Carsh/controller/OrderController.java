@@ -5,6 +5,7 @@ import com.carsh.Carsh.model.entity.User;
 import com.carsh.Carsh.model.service.OrderService;
 import com.carsh.Carsh.model.service.PaymentService;
 import com.carsh.Carsh.model.service.UserService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -59,12 +60,12 @@ public class OrderController {
 
     @PostMapping("/create")
     public String createOrder(@RequestParam Long carId,
-                             @RequestParam LocalDate startDate,
-                             @RequestParam LocalDate endDate,
+                             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
                              @RequestParam String passportSeries,
                              @RequestParam String passportNumber,
                              @RequestParam String passportIssuedBy,
-                             @RequestParam LocalDate passportIssueDate,
+                             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate passportIssueDate,
                              @AuthenticationPrincipal UserDetails userDetails,
                              RedirectAttributes redirectAttributes) {
         
