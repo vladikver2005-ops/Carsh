@@ -39,7 +39,8 @@ public class SecurityConfig {
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService());
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService());
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
@@ -54,7 +55,7 @@ public class SecurityConfig {
         http
             .authenticationProvider(authenticationProvider())
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/", "/home", "/register", "/cars/**", "/h2-console/**").permitAll()
+                .requestMatchers("/", "/home", "/register", "/cars/**", "/h2-console/**", "/auth/login").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/client/**").hasAnyRole("CLIENT", "ADMIN")
                 .requestMatchers("/orders/**").authenticated()
