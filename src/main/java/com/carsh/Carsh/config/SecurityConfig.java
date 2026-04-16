@@ -57,18 +57,19 @@ public class SecurityConfig {
                 .requestMatchers("/", "/home", "/register", "/cars/**", "/h2-console/**").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/client/**").hasAnyRole("CLIENT", "ADMIN")
+                .requestMatchers("/orders/**").authenticated()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
-                .loginPage("/login")
-                .loginProcessingUrl("/login")
+                .loginPage("/auth/login")
+                .loginProcessingUrl("/auth/login")
                 .defaultSuccessUrl("/home", true)
-                .failureUrl("/login?error=true")
+                .failureUrl("/auth/login?error=true")
                 .permitAll()
             )
             .logout(logout -> logout
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/login?logout=true")
+                .logoutSuccessUrl("/auth/login?logout=true")
                 .permitAll()
             )
             .csrf(csrf -> csrf
