@@ -43,14 +43,14 @@ public class AuthController {
         try {
             userService.registerClient(username, password, firstName, lastName, email, phone);
             redirectAttributes.addFlashAttribute("success", "Регистрация успешна! Теперь вы можете войти.");
-            return "redirect:/login";
+            return "redirect:/auth/login";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/register";
         }
     }
 
-    @GetMapping("/login")
+    @GetMapping("/auth/login")
     public String loginForm() {
         return "auth/login";
     }
@@ -66,6 +66,6 @@ public class AuthController {
         } catch (Exception e) {
             // Игнорируем если уже существует
         }
-        return "redirect:/login";
+        return "redirect:/auth/login";
     }
 }

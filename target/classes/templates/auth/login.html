@@ -60,7 +60,8 @@
         </div>
         <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
         
-        <form th:action="@{/login}" method="post">
+        <form th:action="@{/auth/login}" method="post">
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
             <div class="form-group">
                 <label for="username">Имя пользователя</label>
                 <input type="text" id="username" name="username" required>
