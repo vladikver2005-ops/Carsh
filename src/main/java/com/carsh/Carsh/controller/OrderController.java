@@ -5,6 +5,9 @@ import com.carsh.Carsh.model.entity.User;
 import com.carsh.Carsh.model.service.OrderService;
 import com.carsh.Carsh.model.service.PaymentService;
 import com.carsh.Carsh.model.service.UserService;
+import com.carsh.Carsh.util.JwtUtil;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,20 +25,23 @@ public class OrderController {
     private final OrderService orderService;
     private final PaymentService paymentService;
     private final UserService userService;
+    private final JwtUtil jwtUtil;
 
-    public OrderController(OrderService orderService, PaymentService paymentService, UserService userService) {
+    public OrderController(OrderService orderService, PaymentService paymentService, UserService userService, JwtUtil jwtUtil) {
         this.orderService = orderService;
         this.paymentService = paymentService;
         this.userService = userService;
+        this.jwtUtil = jwtUtil;
     }
 
     @GetMapping
-    public String listOrders(@AuthenticationPrincipal UserDetails userDetails, Model model) {
-        if (userDetails == null) {
+    public String listOrders(@AuthenticationPrincipal UserDetails userDetails, 
+                             HttpServletRequest request,
+                             Model model) {
+        User user = getCurrentUser(userDetails, request);
+        if (user == null) {
             return "redirect:/auth/login";
         }
-        User user = userService.getUserByUsername(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
         model.addAttribute("orders", orderService.getOrdersByClient(user));
         return "orders/list";
     }
@@ -51,8 +57,10 @@ public class OrderController {
     @GetMapping("/new/{carId}")
     public String newOrderForm(@PathVariable Long carId, 
                                @AuthenticationPrincipal UserDetails userDetails,
+                               HttpServletRequest request,
                                Model model) {
-        if (userDetails == null) {
+        User user = getCurrentUser(userDetails, request);
+        if (user == null) {
             return "redirect:/auth/login";
         }
         model.addAttribute("carId", carId);
@@ -70,16 +78,16 @@ public class OrderController {
                              @RequestParam String passportIssuedBy,
                              @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate passportIssueDate,
                              @AuthenticationPrincipal UserDetails userDetails,
+                             HttpServletRequest request,
                              RedirectAttributes redirectAttributes) {
         
-        if (userDetails == null) {
+        User user = getCurrentUser(userDetails, request);
+        if (user == null) {
             redirectAttributes.addFlashAttribute("error", "Необходимо авторизоваться");
             return "redirect:/auth/login";
         }
         
         try {
-            User user = userService.getUserByUsername(userDetails.getUsername())
-                    .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
             Order order = orderService.createOrder(
                 user,
                 carId, 
@@ -96,6 +104,39 @@ public class OrderController {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/orders/new/" + carId;
         }
+    }
+
+    /**
+     * Получение текущего пользователя из JWT токена или Spring Security контекста
+     */
+    private User getCurrentUser(UserDetails userDetails, HttpServletRequest request) {
+        // Сначала пробуем получить из токена
+        String token = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("jwt_token".equals(cookie.getName())) {
+                    token = cookie.getValue();
+                    break;
+                }
+            }
+        }
+        
+        if (token != null) {
+            try {
+                Long userId = jwtUtil.getUserIdFromToken(token);
+                return userService.getUserById(userId).orElse(null);
+            } catch (Exception e) {
+                // Если токен невалиден, пробуем через Spring Security
+            }
+        }
+        
+        // Фоллбэк на стандартный механизм Spring Security
+        if (userDetails != null) {
+            return userService.getUserByUsername(userDetails.getUsername()).orElse(null);
+        }
+        
+        return null;
     }
 
     @GetMapping("/admin")

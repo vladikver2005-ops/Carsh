@@ -3,6 +3,7 @@
 *.class
 target/
 # Dependencies
+node_modules/
 # Logs and temp files
 *.log
 *.tmp
@@ -11,7 +12,4 @@ target/
 .env
 .env.local
 *.env.*
-# Editors
-.vscode/
-.idea/
 ```

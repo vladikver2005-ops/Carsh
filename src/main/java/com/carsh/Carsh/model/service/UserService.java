@@ -2,6 +2,7 @@ package com.carsh.Carsh.model.service;
 
 import com.carsh.Carsh.model.entity.User;
 import com.carsh.Carsh.model.repository.UserRepository;
+import com.carsh.Carsh.util.JwtUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,10 +16,12 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
     }
 
     public List<User> getAllUsers() {
@@ -85,6 +88,22 @@ public class UserService {
         user.setEnabled(true);
 
         return userRepository.save(user);
+    }
+
+    /**
+     * Генерация JWT токена для пользователя
+     */
+    public String generateToken(User user) {
+        return jwtUtil.generateToken(user);
+    }
+
+    /**
+     * Получение пользователя из JWT токена
+     */
+    public User getUserFromToken(String token) {
+        Long userId = jwtUtil.getUserIdFromToken(token);
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
     }
 
     public void deleteUser(Long id) {
