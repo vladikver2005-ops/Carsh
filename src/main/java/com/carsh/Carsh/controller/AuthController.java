@@ -2,6 +2,11 @@ package com.carsh.Carsh.controller;
 
 import com.carsh.Carsh.model.entity.User;
 import com.carsh.Carsh.model.service.UserService;
+import com.carsh.Carsh.util.JwtUtil;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,9 +16,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AuthController {
 
     private final UserService userService;
+    private final JwtUtil jwtUtil;
+    private final AuthenticationManager authenticationManager;
 
-    public AuthController(UserService userService) {
+    public AuthController(UserService userService, JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
         this.userService = userService;
+        this.jwtUtil = jwtUtil;
+        this.authenticationManager = authenticationManager;
     }
 
     @GetMapping("/")
@@ -53,6 +62,40 @@ public class AuthController {
     @GetMapping("/auth/login")
     public String loginForm() {
         return "auth/login";
+    }
+
+    @PostMapping("/auth/login")
+    public String login(@RequestParam String username,
+                       @RequestParam String password,
+                       Model model,
+                       RedirectAttributes redirectAttributes,
+                       HttpServletResponse response) {
+        try {
+            // Проверяем учетные данные через AuthenticationManager
+            UsernamePasswordAuthenticationToken authenticationToken = 
+                new UsernamePasswordAuthenticationToken(username, password);
+            authenticationManager.authenticate(authenticationToken);
+            
+            // Если аутентификация успешна, получаем пользователя
+            User user = userService.getUserByUsername(username)
+                    .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+            
+            // Генерируем JWT токен
+            String token = userService.generateToken(user);
+            
+            // Устанавливаем токен в cookie
+            Cookie cookie = new Cookie("jwt_token", token);
+            cookie.setHttpOnly(true);
+            cookie.setMaxAge(24 * 60 * 60); // 24 часа
+            cookie.setPath("/");
+            response.addCookie(cookie);
+            
+            redirectAttributes.addFlashAttribute("success", "Вход выполнен успешно!");
+            return "redirect:/cars";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Неверное имя пользователя или пароль");
+            return "redirect:/auth/login";
+        }
     }
 
     @GetMapping("/admin/init")

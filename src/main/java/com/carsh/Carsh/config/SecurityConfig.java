@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.savedrequest.SavedRequest;
 
 @Configuration
@@ -21,9 +22,11 @@ import org.springframework.security.web.savedrequest.SavedRequest;
 public class SecurityConfig {
 
     private final UserRepository userRepository;
+    private final JwtAuthFilter jwtAuthFilter;
 
-    public SecurityConfig(UserRepository userRepository) {
+    public SecurityConfig(UserRepository userRepository, JwtAuthFilter jwtAuthFilter) {
         this.userRepository = userRepository;
+        this.jwtAuthFilter = jwtAuthFilter;
     }
 
     @Bean
@@ -53,6 +56,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
             .authenticationProvider(authenticationProvider())
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/", "/home", "/register", "/cars/**", "/h2-console/**", "/auth/login", "/admin/init").permitAll()
@@ -86,7 +90,7 @@ public class SecurityConfig {
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/auth/login?logout=true")
                 .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
+                .deleteCookies("JSESSIONID", "jwt_token")
                 .permitAll()
             )
             .csrf(csrf -> csrf

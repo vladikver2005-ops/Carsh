@@ -1,5 +1,6 @@
 com/carsh/Carsh/model/service/UserService.class
 com/carsh/Carsh/model/repository/PaymentRepository.class
+com/carsh/Carsh/config/JwtAuthFilter.class
 com/carsh/Carsh/model/entity/User.class
 com/carsh/Carsh/controller/OrderController.class
 com/carsh/Carsh/model/entity/Damage$DamageStatus.class
@@ -14,6 +15,7 @@ com/carsh/Carsh/controller/CarController.class
 com/carsh/Carsh/controller/AuthController.class
 com/carsh/Carsh/model/service/OrderService.class
 com/carsh/Carsh/model/entity/Damage.class
+com/carsh/Carsh/util/JwtUtil.class
 com/carsh/Carsh/model/repository/UserRepository.class
 com/carsh/Carsh/model/entity/Order$OrderStatus.class
 com/carsh/Carsh/ServletInitializer.class
